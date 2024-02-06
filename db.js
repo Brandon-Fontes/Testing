@@ -1,19 +1,25 @@
-const { MongoClient } = require ('mongodb')
+const express =  require("express")
+const { config } = require('./config.js')
 
-let dbConnection
 
-module.exports = {
-    connectToDb: (cb) => {
-        MongoClient.connect(mongo)
-            .then((client) => {
-                dbConnection = client.db()
-                return cb()
-            })
-            .catch(err => {
-                console.log(err)
-                return cb(err)
-            })
-    },
-    getDb: () => dbConnection
-}
+const {
+    createPool
+} = require('mysql');
+
+const pool = createPool({
+    host: "localhost",
+    user: "root",
+    password: config,
+    database: "test",
+    connectionLimit: 10
+})
+
+pool.query('select * from first_table', (err, result, fields) =>{
+    if(err){
+        return console.log(err);
+    }
+    return console.log(result);
+})
+
+
 
